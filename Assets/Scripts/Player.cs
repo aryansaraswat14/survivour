@@ -4,51 +4,81 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private Animator ani;
-    private bool canmove = false;
-    private Vector3 movePosition = Vector3.zero;
+    public float walkSpeed = 20.0f;
+    public float sprintSpeed = 100.0f;
+    public float rotationSpeed = 30.0f;
+    public float jumpSpeed = 20.0f;
+
+    public float rotX;
+    public float rotY;
+    public float rotZ;
+
+
     private Vector3 moveDirection = Vector3.zero;
-    private CharacterController charactercontroller;
-    public float speed;
-    // Start is called before the first frame update
+    private bool canSprint = false;
+    private float speed;
+    private bool canJump = false;
+
+    // component references
+    private CharacterController characterController;
+    private Animator animator;
+
     void Awake()
     {
-        ani = GetComponent<Animator>();
-        charactercontroller = GetComponent<CharacterController>();
+        characterController = GetComponent<CharacterController>();
+        animator = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        charactercontroller.Move(moveDirection);
+        speed = walkSpeed;
+        canSprint = false;
 
-        /*if(Input.GetMouseButtonDown(0))
+        if (Input.GetKey(KeyCode.LeftShift))
         {
-            var mousePosition = Input.mousePosition;
-            Debug.Log(mousePosition);
+            speed = sprintSpeed;
+            canSprint = true;
+        }
 
-            Ray ray = Camera.main.ScreenPointToRay(mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray , out hit))
+
+        if(characterController.isGrounded)
+        {
+            moveDirection = new Vector3(0, 0, Input.GetAxis("Vertical"));
+            moveDirection = transform.TransformDirection(moveDirection);
+            moveDirection *= speed;
+
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                movePosition = hit.point;
-                canmove = true;
-                movePosition.y = transform.position.y;
-                moveDirection = (movePosition - transform.position).normalized;
-                ani.SetBool("canwalk", true);
-                
-
+            
+                moveDirection.y = jumpSpeed;
+              
             }
         }
-        if(canmove)
-        {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(moveDirection), 0.1f);
-            charactercontroller.Move(moveDirection*speed*Time.deltaTime);
 
+        transform.Rotate(new Vector3(0, Input.GetAxis("Horizontal") * rotationSpeed * Time.deltaTime, 0));
+        moveDirection.y -= 9.8f * Time.deltaTime;
+        characterController.Move(moveDirection * Time.deltaTime);
+
+        var magnitude = new Vector2(characterController.velocity.x, characterController.velocity.z).magnitude;
+        animator.SetFloat("speed", magnitude);
+        animator.SetBool("canSprint", canSprint);
+
+
+
+        rotX -= Input.GetAxis("Mouse Y") * Time.deltaTime * rotationSpeed;
+        rotY += Input.GetAxis("Mouse X") * Time.deltaTime * rotationSpeed;
+
+        if (rotX < -90)
+        {
+            rotX = -90;
         }
-        if (Vector3.Distance(movePosition, transform.position) <= 0.5f)
-            canmove = false;*/
-        
+        else if (rotX > 90)
+        {
+            rotX = 90;
+        }
+
+        transform.rotation = Quaternion.Euler(0, rotY, 0);
+        GameObject.FindWithTag("MainCamera").transform.rotation = Quaternion.Euler(rotX, rotY, 0);
+
     }
 }
