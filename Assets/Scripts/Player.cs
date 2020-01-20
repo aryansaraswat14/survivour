@@ -4,42 +4,40 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public float walkSpeed = 20.0f;
-    public float sprintSpeed = 100.0f;
+    public float walkSpeed = 10.0f;
+    public float sprintSpeed = 20.0f;
     public float rotationSpeed = 30.0f;
     public float jumpSpeed = 20.0f;
 
-    public float rotX;
-    public float rotY;
-    public float rotZ;
-
-
     private Vector3 moveDirection = Vector3.zero;
     private bool canSprint = false;
-    private float speed;
     private bool canJump = false;
+    private float speed;
+    public float rotX;
+    public float rotY;
+   
+
 
     // component references
     private CharacterController characterController;
     private Animator animator;
+    private HealthSystem healthSystem;
+    private HungerSystem hungerSystem;
 
     void Awake()
     {
         characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
+        healthSystem = GetComponent<HealthSystem>();
+        hungerSystem = GetComponent<HungerSystem>();
+        hungerSystem.SetHealthSystem(healthSystem);
     }
 
     void Update()
     {
         speed = walkSpeed;
         canSprint = false;
-
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            speed = sprintSpeed;
-            canSprint = true;
-        }
-
+        canJump = false;
 
         if(characterController.isGrounded)
         {
@@ -49,26 +47,32 @@ public class Player : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-            
                 moveDirection.y = jumpSpeed;
-              
+                canJump = true;
             }
         }
 
-        transform.Rotate(new Vector3(0, Input.GetAxis("Horizontal") * rotationSpeed * Time.deltaTime, 0));
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            speed = sprintSpeed;
+            canSprint = true;
+        }
+
+        transform.Rotate(new Vector3(0, Input.GetAxis("Horizontal") * 
+            rotationSpeed * Time.deltaTime, 0));
         moveDirection.y -= 9.8f * Time.deltaTime;
         characterController.Move(moveDirection * Time.deltaTime);
 
         var magnitude = new Vector2(characterController.velocity.x, characterController.velocity.z).magnitude;
         animator.SetFloat("speed", magnitude);
         animator.SetBool("canSprint", canSprint);
+        animator.SetBool("canJump", canJump);
+    
 
+    rotX -= Input.GetAxis("Mouse Y") * Time.deltaTime* rotationSpeed;
+    rotY += Input.GetAxis("Mouse X") * Time.deltaTime* rotationSpeed;
 
-
-        rotX -= Input.GetAxis("Mouse Y") * Time.deltaTime * rotationSpeed;
-        rotY += Input.GetAxis("Mouse X") * Time.deltaTime * rotationSpeed;
-
-        if (rotX < -90)
+        if (rotX< -90)
         {
             rotX = -90;
         }
@@ -80,5 +84,28 @@ public class Player : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, rotY, 0);
         GameObject.FindWithTag("MainCamera").transform.rotation = Quaternion.Euler(rotX, rotY, 0);
 
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if(hit.gameObject.CompareTag("Obstacle"))
+        {
+            var obstacle = hit.gameObject.GetComponent<Obstacle>();
+            if(obstacle)
+            {
+                healthSystem.DecreaseHealth(obstacle.health);
+            }
+        }
+
+        if(hit.gameObject.CompareTag("Food"))
+        {
+            var food = hit.gameObject.GetComponent<Food>();
+            if(food)
+            {
+                Destroy(hit.gameObject);
+                healthSystem.IncreaseHealth(food.health);
+                hungerSystem.DecreaseHungerLevel(food.hunger);
+            }
+        }
     }
 }

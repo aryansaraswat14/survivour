@@ -4,20 +4,6 @@ using UnityEngine;
 
 public class Food : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if (hit.gameObject.CompareTag("Food"))
-            Destroy(hit.gameObject);
-    }
+    public int hunger = 100;
+    public int health = 10;
 }
