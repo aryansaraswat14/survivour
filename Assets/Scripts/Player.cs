@@ -12,17 +12,15 @@ public class Player : MonoBehaviour
     private Vector3 moveDirection = Vector3.zero;
     private bool canSprint = false;
     private bool canJump = false;
-    private float speed;
-    public float rotX;
-    public float rotY;
-   
-
+    private float speed , rotX , rotY;
 
     // component references
     private CharacterController characterController;
     private Animator animator;
     private HealthSystem healthSystem;
     private HungerSystem hungerSystem;
+    private Backpack backpack;
+    public  UIManager UIManager;
 
     void Awake()
     {
@@ -30,7 +28,7 @@ public class Player : MonoBehaviour
         animator = GetComponent<Animator>();
         healthSystem = GetComponent<HealthSystem>();
         hungerSystem = GetComponent<HungerSystem>();
-        hungerSystem.SetHealthSystem(healthSystem);
+        backpack = GetComponent<Backpack>();
     }
 
     void Update()
@@ -49,7 +47,8 @@ public class Player : MonoBehaviour
             {
                 moveDirection.y = jumpSpeed;
                 canJump = true;
-            }
+            
+        }
         }
 
         if (Input.GetKey(KeyCode.LeftShift))
@@ -67,12 +66,11 @@ public class Player : MonoBehaviour
         animator.SetFloat("speed", magnitude);
         animator.SetBool("canSprint", canSprint);
         animator.SetBool("canJump", canJump);
-    
 
-    rotX -= Input.GetAxis("Mouse Y") * Time.deltaTime* rotationSpeed;
-    rotY += Input.GetAxis("Mouse X") * Time.deltaTime* rotationSpeed;
+        rotX -= Input.GetAxis("Mouse Y") * Time.deltaTime * rotationSpeed;
+        rotY += Input.GetAxis("Mouse X") * Time.deltaTime * rotationSpeed;
 
-        if (rotX< -90)
+        if (rotX < -90)
         {
             rotX = -90;
         }
@@ -84,6 +82,12 @@ public class Player : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, rotY, 0);
         GameObject.FindWithTag("MainCamera").transform.rotation = Quaternion.Euler(rotX, rotY, 0);
 
+    
+
+        if(Input.GetKeyDown(KeyCode.B))
+        {
+            UIManager.ToggleInventory();
+        }
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
@@ -97,7 +101,15 @@ public class Player : MonoBehaviour
             }
         }
 
-        if(hit.gameObject.CompareTag("Food"))
+        if(hit.gameObject.CompareTag("Item"))
+        {
+            if(backpack.AddItem(hit.gameObject))
+            {
+                Destroy(hit.gameObject);
+            }
+        }
+
+        /*if(hit.gameObject.CompareTag("Food"))
         {
             var food = hit.gameObject.GetComponent<Food>();
             if(food)
@@ -106,6 +118,6 @@ public class Player : MonoBehaviour
                 healthSystem.IncreaseHealth(food.health);
                 hungerSystem.DecreaseHungerLevel(food.hunger);
             }
-        }
+        }*/
     }
 }

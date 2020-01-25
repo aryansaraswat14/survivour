@@ -12,10 +12,10 @@ GameObject:
   - component: {fileID: 7800775948637468003}
   - component: {fileID: 5605268664211229943}
   - component: {fileID: 1383084784575939104}
-  - component: {fileID: 792491220922977907}
+  - component: {fileID: 8683261870737598099}
   m_Layer: 0
   m_Name: Pineapple
-  m_TagString: Food
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -59,7 +59,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c1b9c1d06ecce2042847a5aee6c513e2, type: 2}
+  - {fileID: 2100000, guid: 0fa05bdc14ae5bd4b920c7cee6c34cc4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -93,7 +93,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &792491220922977907
+--- !u!114 &8683261870737598099
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -102,8 +102,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3681246004527209803}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6380c48c50b752f4f980c143fde12c7a, type: 3}
+  m_Script: {fileID: 11500000, guid: e629d7d3d5d26634d865f0f969a5c214, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hunger: 100
-  health: 10
+  Data: {fileID: 11400000, guid: f573ea6ea0478684a8d1ca1026c06499, type: 2}
