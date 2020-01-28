@@ -8,7 +8,7 @@ public class ItemData : ScriptableObject
 {
     public string Name;
     public string Description;
-    public float Weight; // in kgs
+    public float Weight;
     public Sprite Sprite;
     public List<string> Actions;
 }

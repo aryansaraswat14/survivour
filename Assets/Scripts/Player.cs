@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     private bool canSprint = false;
     private bool canJump = false;
     private float speed , rotX , rotY;
+    
 
     // component references
     private CharacterController characterController;
@@ -95,29 +96,35 @@ public class Player : MonoBehaviour
         if(hit.gameObject.CompareTag("Obstacle"))
         {
             var obstacle = hit.gameObject.GetComponent<Obstacle>();
-            if(obstacle)
+            if (obstacle)
             {
-                healthSystem.DecreaseHealth(obstacle.health);
+                    healthSystem.DecreaseHealth(obstacle.health);
+                
             }
         }
 
-        if(hit.gameObject.CompareTag("Item"))
-        {
-            if(backpack.AddItem(hit.gameObject))
+       
+        
+                 if(hit.gameObject.CompareTag("Item"))
+                 {
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                Destroy(hit.gameObject);
+                if (backpack.AddItem(hit.gameObject))
+                {
+                    Destroy(hit.gameObject);
+                }
             }
-        }
+                 }
 
-        /*if(hit.gameObject.CompareTag("Food"))
-        {
-            var food = hit.gameObject.GetComponent<Food>();
-            if(food)
-            {
-                Destroy(hit.gameObject);
-                healthSystem.IncreaseHealth(food.health);
-                hungerSystem.DecreaseHungerLevel(food.hunger);
+                 /*if(hit.gameObject.CompareTag("Food"))
+                 {
+                     var food = hit.gameObject.GetComponent<Food>();
+                     if(food)
+                     {
+                         Destroy(hit.gameObject);
+                         healthSystem.IncreaseHealth(food.health);
+                         hungerSystem.DecreaseHungerLevel(food.hunger);
+                     }*/
+                 }
             }
-        }*/
-    }
-}
+        

@@ -15,7 +15,7 @@ MonoBehaviour:
   Name: Bandage
   Description: It's a bandage
   Weight: 0.1
-  Sprite: {fileID: 21300000, guid: f8383bbb34ee4f745a950c8ea0986746, type: 3}
+  Sprite: {fileID: 21300000, guid: 1273d14791929ed499ba4ef48b9b5896, type: 3}
   Actions:
   - apply
   - drop

@@ -7,7 +7,7 @@ public class InventoryUI : MonoBehaviour
 {
     public RectTransform Content;
     public GameObject Item;
-    // Backpack
+
     public Backpack Backpack;
 
     
@@ -35,7 +35,7 @@ public class InventoryUI : MonoBehaviour
             itemUI.Count.text = "x " + item.Value.ToString();
         }
 
-        // Add new content
+
     }
 
     public void Toggle()

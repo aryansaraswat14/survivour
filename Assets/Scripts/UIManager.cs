@@ -8,11 +8,11 @@ public class UIManager : MonoBehaviour
     public Text Health;
     public Text HungerLevel;
 
-    // Systems
+
     public HealthSystem HealthSystem;
     public HungerSystem HungerSystem;
 
-    // UI Components
+
     public InventoryUI InventoryUI;
     
     // Start is called before the first frame update
